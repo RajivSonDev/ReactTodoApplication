@@ -1,0 +1,91 @@
+import { deleteTodoWithId, retrieveAllTodosForUsername } from "./api/TodoApiService";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "./security/AuthContext";
+import { useNavigate } from "react-router-dom";
+
+
+export default function ListTodosComponent(){
+
+
+    const today= new Date();
+    const targetDate = new Date(today.getFullYear()+12,today.getMonth(),today.getDay())
+
+    const authContext=useAuth()
+
+    const username=authContext.username;
+
+    const navigate=useNavigate()
+
+    // in jsx every array has foreach method
+
+    const [todos, setTodos] = useState([]);
+    const [message,setMessage]=useState(null);
+
+    useEffect(() => {
+       refreshTodos()
+    },[]);
+
+    function deleteTodo(id){
+        deleteTodoWithId(id,username).then(
+            //1: Display Message
+            //2: Update Todos List
+            ()=>{
+                setMessage("Delete todo is successfully.")
+                refreshTodos()
+            }
+        )
+        .catch(error=>console.log(error))
+    }
+
+    function updateTodo(id){
+        navigate(`/todo/${id}`)
+    }
+
+
+    function refreshTodos(){
+        retrieveAllTodosForUsername(username).then(
+            (response)=>setTodos(response.data)
+        )
+        .catch((error)=>console.log(error))
+        .finally(()=>console.log(""))
+    }
+
+    return (
+        <div className="container">
+            <h1>Things you want do!</h1>
+            {message && <div className="alert alert-warning">{message}</div> }
+            
+            <div>
+                <table className='table'>
+                    <thead>
+                          <tr>
+                            <th>Description</th>
+                            <th>is Done?</th>
+                           <th>Target Date</th>
+                            <th>Delete</th>
+                            <th>Update</th>
+                          </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        // interative through all array
+                        todos.map(
+                            (todo)=>(
+                                <tr key={todo.id}>
+                                        <td>{todo.description}</td>
+                                        <td>{todo.done.toString()}</td>
+                                        <td>{todo.targetDate.toString()}</td>
+                                        <td><button className="btn btn-warning" onClick={()=>deleteTodo(todo.id)}>Delete</button></td>
+                                        <td><button className="btn btn-success" onClick={()=>updateTodo(todo.id)}>Update</button></td>
+                                </tr>
+                            )
+                        )
+
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
