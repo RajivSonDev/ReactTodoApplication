@@ -11,10 +11,15 @@ export function retrieveAllTodosForUsername(username){
 }
 
 export function deleteTodoWithId(id,username){
-    return apiClient.delete(`http://localhost:8080/users/${username}/todos/${id}`)
+    return apiClient.delete(`/users/${username}/todos/${id}`)
 }
 
 
 export function retrieveTodoDetails(id){
-    return apiClient.get(`http://localhost:8080/users/todos/${id}`)
+    return apiClient.get(`/users/todos/${id}`)
+}
+
+
+export function updateTodo(id,username,todo){
+    return apiClient.put(`user/${username}/todos/${id}`, todo)
 }
