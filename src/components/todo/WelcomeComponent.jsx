@@ -61,7 +61,7 @@ export default function WelcomeComponent(){
 
             <div>
                 <button className='btn btn-success m-5' onClick={callHelloWorldRestApi}>
-                    Call Hello World REST Api {message}
+                    Call REST Api {message}
                 </button>
             </div>
 

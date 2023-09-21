@@ -45,7 +45,10 @@ export default function ListTodosComponent(){
 
     function refreshTodos(){
         retrieveAllTodosForUsername(username).then(
-            (response)=>setTodos(response.data)
+            (response)=>{
+                setTodos(response.data)
+                console.log(response)
+            }
         )
         .catch((error)=>console.log(error))
         .finally(()=>console.log(""))
@@ -85,7 +88,7 @@ export default function ListTodosComponent(){
                                 </tr>
                             )
                         )
-
+                        
                     }
                     </tbody>
                 </table>

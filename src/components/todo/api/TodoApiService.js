@@ -6,6 +6,22 @@ const apiClient = axios.create(
     }
 )
 
+const username='username'
+const password='password'
+const baToken='Basic '+window.btoa( username+ ":" + password )
+
+apiClient.interceptors.request.use(
+    (config)=>{
+        console.log('intercepting and adding a token')
+        config.headers.Authorization = baToken
+        return config
+    }
+)
+
+const header={
+    Authorization:'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
+}
+
 export function retrieveAllTodosForUsername(username){
     return apiClient.get(`/users/${username}/todos`)
 }
