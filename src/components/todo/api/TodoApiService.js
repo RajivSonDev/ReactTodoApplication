@@ -23,3 +23,7 @@ export function retrieveTodoDetails(id){
 export function updateTodo(id,username,todo){
     return apiClient.put(`user/${username}/todos/${id}`, todo)
 }
+
+export function createTodo(id,username,todo){
+    return apiClient.post(`user/${username}/todos`, todo)
+}

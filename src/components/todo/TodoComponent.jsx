@@ -1,5 +1,5 @@
 import { useParams,useNavigate } from "react-router-dom"
-import { retrieveTodoDetails, updateTodo } from "./api/TodoApiService";
+import { createTodo, retrieveTodoDetails, updateTodo } from "./api/TodoApiService";
 import { useAuth } from "./security/AuthContext";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -20,15 +20,19 @@ export default function TodoComponent(){
 
     function retrevieTodo(){
         
-        retrieveTodoDetails(id).then(
-            (response)=>{
-               // console.log(response)
-                setDescription(response.data.description)
-                setDate(response.data.targetDate)
-            })
-        .catch(
-            (error)=>console.log(error)
-        )
+        if(id!=-1){
+
+            retrieveTodoDetails(id).then(
+                (response)=>{
+                // console.log(response)
+                    setDescription(response.data.description)
+                    setDate(response.data.targetDate)
+                })
+            .catch(
+                (error)=>console.log(error)
+            )
+
+        }
     }
 
 
@@ -58,12 +62,24 @@ export default function TodoComponent(){
 
         if(validate()){
             console.log("send request")
-            updateTodo(id,username,todo).
-            then(
-                response=>navigate('/todos')
-            ).catch(
-               (error)=>console.log(error)
-            )
+
+            if(id==-1){
+                createTodo(id,username,todo).
+                then(
+                    response=>navigate('/todos')
+                ).catch(
+                   (error)=>console.log(error)
+                )
+            }
+            else{
+                updateTodo(id,username,todo).
+                then(
+                    response=>navigate('/todos')
+                ).catch(
+                   (error)=>console.log(error)
+                )
+            }
+           
             //console.log(todo)
         }
 
@@ -72,11 +88,12 @@ export default function TodoComponent(){
     function validate(){
 
         if(description.length<5){
+                
             alert("Enter Aleast 5 Characters")
             return false
         }
-
-        if(date == null){
+        
+        if(date == null || date==''){
             alert("Please Select Date")
             return false
         }
